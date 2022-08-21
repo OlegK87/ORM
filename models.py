@@ -11,24 +11,7 @@ class Publisher(Base):
     id = sq.Column(sq.Integer, primary_key=True)
     name = sq.Column(sq.String(length=40), unique=True)
 
-    books = relationship("Book", backref="publisher")
-
-class Book(Base):
-    __tablename__ = "book"
-
-    id = sq.Column(sq.Integer, primary_key=True)
-    title = sq.Column(sq.String(length=40), nullable=False)
-    publisher_id = sq.Column(sq.Integer, sq.ForeignKey("publisher.id"), nullable=False)
-
-    publisher = relationship("Publisher", backref="books")
-
-class Shop(Base):
-    __tablename__ = "shop"
-
-    id = sq.Column(sq.Integer, primary_key=True)
-    name = sq.Column(sq.String(length=40), unique=True)
-
-    stocks = relationship("Stock", backref="shops")
+    books = relationship("Book", back_populates="publisher")
 
 class Stock(Base):
     __tablename__ = "stock"
@@ -38,8 +21,27 @@ class Stock(Base):
     shop_id = sq.Column(sq.Integer, sq.ForeignKey("shop.id"), nullable=False)
     count = sq.Column(sq.Integer, nullable=False)
 
-    shops = relationship("Shop", backref="stocks")
-    books2 = relationship("Book", backref="publisher")
+    shops = relationship("Shop", back_populates="stocks")
+    books2 = relationship("Book", back_populates="stocks2")
+    sales = relationship("Sale", back_populates="stocks3")
+
+class Book(Base):
+    __tablename__ = "book"
+
+    id = sq.Column(sq.Integer, primary_key=True)
+    title = sq.Column(sq.String(length=40), nullable=False)
+    publisher_id = sq.Column(sq.Integer, sq.ForeignKey("publisher.id"), nullable=False)
+
+    stocks2 = relationship("Stock", back_populates="books2")
+    publisher = relationship("Publisher", back_populates="books")
+
+class Shop(Base):
+    __tablename__ = "shop"
+
+    id = sq.Column(sq.Integer, primary_key=True)
+    name = sq.Column(sq.String(length=40), unique=True)
+
+    stocks = relationship("Stock", back_populates="shops")
 
 
 class Sale(Base):
@@ -52,7 +54,7 @@ class Sale(Base):
     stock_id = sq.Column(sq.Integer, sq.ForeignKey("stock.id"), nullable=False)
     count = sq.Column(sq.Integer, nullable=False)
 
-    stocks2 = relationship("Stock", backref="shops")
+    stocks3 = relationship("Stock", back_populates="sales")
 
 def create_tables(engine):
     Base.metadata.drop_all(engine)
