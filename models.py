@@ -13,6 +13,9 @@ class Publisher(Base):
 
     books = relationship("Book", back_populates="publisher")
 
+    def __str__(self):
+        return f'{self.id}: {self.name}'
+
 class Stock(Base):
     __tablename__ = "stock"
 
