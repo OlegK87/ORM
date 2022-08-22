@@ -27,15 +27,15 @@ for record in data:
 
 session.commit()
 
-name = input("Введите имя издателя: ")
+for i in session.query(Shop).join(Stock, Shop.id == Stock.id_shop).join(Book, Book.id == Stock.id_book)\
+        .join(Publisher, Publisher.id == Book.id_publisher).\
+        filter(Publisher.name.like(input("Введите имя издателя: "))).all():
+      print(i)
 
-for i in session.query(Publisher).filter(Publisher.name.like(f'%{name}%')).all():
-    print(i)
-
-number = input("Введите номер id издателя: ")
-
-for j in session.query(Publisher).filter(Publisher.id == f'{number}').all():
-    print(j)
+for j in session.query(Shop).join(Stock, Shop.id == Stock.id_shop).join(Book, Book.id == Stock.id_book)\
+        .join(Publisher, Publisher.id == Book.id_publisher).\
+        filter(Publisher.id == f'{input("Введите номер id издателя: ")}').all():
+      print(j)
 
 session.close()
 

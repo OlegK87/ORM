@@ -27,6 +27,10 @@ class Stock(Base):
     books2 = relationship("Book", back_populates="stocks2")
     sales = relationship("Sale", back_populates="stocks3")
 
+    def __str__(self):
+        return f'{self.id}: ({self.id_book}, {self.id_shop}, {self.count})'
+
+
 class Book(Base):
     __tablename__ = "book"
 
@@ -45,6 +49,9 @@ class Shop(Base):
 
     stocks = relationship("Stock", back_populates="shops")
 
+    def __str__(self):
+        return f'{self.id}: {self.name}'
+
 
 class Sale(Base):
     __tablename__ = "sale"
@@ -52,11 +59,13 @@ class Sale(Base):
     id = sq.Column(sq.Integer, primary_key=True)
     price = sq.Column(sq.Float, nullable=False)
     date_sale = sq.Column(sq.DateTime, nullable=False)
-    name = sq.Column(sq.String(length=40), unique=True)
     id_stock = sq.Column(sq.Integer, sq.ForeignKey("stock.id"), nullable=False)
     count = sq.Column(sq.Integer, nullable=False)
 
     stocks3 = relationship("Stock", back_populates="sales")
+
+    def __str__(self):
+        return f'{self.id}: ({self.price}, {self.date_sale}, {self.id_stock}, {self.count})'
 
 def create_tables(engine):
     Base.metadata.drop_all(engine)
