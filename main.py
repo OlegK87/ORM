@@ -26,16 +26,17 @@ for record in data:
     session.add(model(id=record.get('pk'), **record.get('fields')))
 
 session.commit()
-
+name = input("Введите имя издателя: ")
 for i in session.query(Shop).join(Stock, Shop.id == Stock.id_shop).join(Book, Book.id == Stock.id_book)\
         .join(Publisher, Publisher.id == Book.id_publisher).\
-        filter(Publisher.name.like(input("Введите имя издателя: "))).all():
-      print(i)
+        filter(Publisher.name.like(f"{name}")).all():
+    print(f"Магазин {i} продает книги издателя {name}")
 
+id = input("Введите номер id издателя: ")
 for j in session.query(Shop).join(Stock, Shop.id == Stock.id_shop).join(Book, Book.id == Stock.id_book)\
         .join(Publisher, Publisher.id == Book.id_publisher).\
-        filter(Publisher.id == f'{input("Введите номер id издателя: ")}').all():
-      print(j)
+        filter(Publisher.id == f'{id}').all():
+      print(f"Магазин {j} продает книги издателя {id}")
 
 session.close()
 
